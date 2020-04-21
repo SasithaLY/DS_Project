@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @Entity
 @Table(name = "alarm_sensor")
@@ -23,9 +25,13 @@ public class Sensor {
 	private int roomNo;
     
     @Column(name = "smoke", columnDefinition = "integer default 0")
+    @Min(0)
+    @Max(10)
 	private int smoke;
     
     @Column(name = "co2", columnDefinition = "integer default 0")
+    @Min(0)
+    @Max(10)
 	private int co2;
     
     @Column(name = "active")

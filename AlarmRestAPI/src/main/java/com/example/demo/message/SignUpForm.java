@@ -25,7 +25,6 @@ public class SignUpForm {
         this.username = username;
     }
  
-   
     public boolean isActive() {
 		return active;
 	}

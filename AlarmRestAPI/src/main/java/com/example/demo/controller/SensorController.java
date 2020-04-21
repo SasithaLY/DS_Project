@@ -50,5 +50,9 @@ public class SensorController {
 		return sensorService.deleteSensor(id);
 	}
 	
-	
+	@PutMapping("/api/setSensorLevels")
+	public int setSensorLevels(@RequestBody Sensor sensor) {
+		
+		return sensorService.setSensorLevels(sensor);
+	}
 }

@@ -49,4 +49,9 @@ public class SensorService {
 		
 	}
 	
+	public int setSensorLevels(Sensor sensor) {
+		
+		return sensorRepository.setSensorLevels(sensor.getCo2(), sensor.getSmoke(), sensor.getSensorId());
+	}
+	
 }
