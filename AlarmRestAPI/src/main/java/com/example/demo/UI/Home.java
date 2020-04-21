@@ -15,7 +15,6 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import sun.rmi.runtime.Log;
 
 /**
  * @author ishan
@@ -116,7 +115,7 @@ public class Home extends javax.swing.JFrame {
         roomNumberRegister = new java.awt.TextField();
         floorNumberRegister = new java.awt.TextField();
         label8 = new java.awt.Label();
-        statusRegister = new javax.swing.JTextField();
+        statusRegister = new java.awt.TextField();
         jPanel3 = new javax.swing.JPanel();
         label2 = new java.awt.Label();
         updateBtn = new java.awt.Button();
@@ -126,6 +125,8 @@ public class Home extends javax.swing.JFrame {
         idUpdate = new java.awt.TextField();
         roomNumberUpdate = new java.awt.TextField();
         floorNumberUpdate = new java.awt.TextField();
+        statusEdit = new java.awt.TextField();
+        label9 = new java.awt.Label();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane8 = new javax.swing.JScrollPane();
         jTable8 = new javax.swing.JTable();
@@ -179,7 +180,7 @@ public class Home extends javax.swing.JFrame {
                                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addComponent(roomNumberRegister, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                         .addComponent(floorNumberRegister, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(statusRegister))))
+                                                        .addComponent(statusRegister, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -213,7 +214,11 @@ public class Home extends javax.swing.JFrame {
         updateBtn.setLabel("Update");
         updateBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                updateBtnActionPerformed(evt);
+                try {
+                    updateBtnActionPerformed(evt);
+                } catch (UnirestException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -222,6 +227,8 @@ public class Home extends javax.swing.JFrame {
         label6.setText("Floor Number:");
 
         label7.setText("ID:");
+
+        label9.setText("Status:");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -238,32 +245,39 @@ public class Home extends javax.swing.JFrame {
                                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addComponent(label7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(label5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(label6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(label6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(label9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                                 .addGap(13, 13, 13)
                                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addComponent(idUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                         .addComponent(roomNumberUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(floorNumberUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE))))
+                                                        .addComponent(floorNumberUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+                                                        .addComponent(statusEdit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
                 jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addGroup(jPanel3Layout.createSequentialGroup()
-                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(label7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(idUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(label5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(roomNumberUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(label6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(floorNumberUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                        .addGroup(jPanel3Layout.createSequentialGroup()
+                                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                        .addComponent(label7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                        .addComponent(idUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(label5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(roomNumberUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(label6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(floorNumberUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(statusEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(label9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(updateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
@@ -372,6 +386,7 @@ public class Home extends javax.swing.JFrame {
         pack();
     }// </editor-fold>
 
+
     private void submitBtnActionPerformed(java.awt.event.ActionEvent evt) throws UnirestException {
         String roomNumber = roomNumberRegister.getText();
         String floorNumber = floorNumberRegister.getText();
@@ -398,9 +413,9 @@ public class Home extends javax.swing.JFrame {
                     .body(jsonString)
                     .asString();
 
-            JSONObject myResponse = new JSONObject(response.getBody().toString());
+//            JSONObject myResponse = new JSONObject(response.getBody().toString());
 
-            if (response.getStatus() == 200){
+            if (response.getStatus() == 200) {
                 statusDisplayHome.setText("Sensor Successfully Registered!");
                 roomNumberRegister.setText("");
                 floorNumberRegister.setText("");
@@ -420,12 +435,51 @@ public class Home extends javax.swing.JFrame {
 
     }
 
-    private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        String id = idUpdate.getText();
-        String roomNumber = roomNumberUpdate.getText();
-        String floorNumber = floorNumberUpdate.getText();
+    private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) throws UnirestException {
+        String id = idUpdate.getText().trim();
+        String roomNumber = roomNumberUpdate.getText().trim();
+        String floorNumber = floorNumberUpdate.getText().trim();
+        String status = statusEdit.getText().trim();
 
 
+        String jsonString = "";
+        try {
+            jsonString = new JSONObject()
+                    .put("sensorId", id)
+                    .put("floorNo", roomNumber)
+                    .put("roomNo", floorNumber)
+                    .put("active", status).toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+            Unirest.setTimeouts(0, 0);
+            HttpResponse<String> response = Unirest.put("http://localhost:8080/api/admin/updateSensor")
+                    .header("Authorization", "Bearer " + Login.TOKEN_BEARER)
+                    .header("Content-Type", "application/json")
+                    .body(jsonString)
+                    .asString();
+
+            if (response.getStatus() == 200) {
+                statusDisplayHome.setText("Sensor Successfully Updated!");
+                idUpdate.setText("");
+                roomNumberUpdate.setText("");
+                floorNumberUpdate.setText("");
+                statusEdit.setText("");
+
+                DefaultTableModel model = (DefaultTableModel) jTable8.getModel();
+                model.setRowCount(0);
+                this.getAlarmData();
+
+            } else {
+                statusDisplayHome.setText("Error in Sensor Update!");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
     }
@@ -468,11 +522,13 @@ public class Home extends javax.swing.JFrame {
     private java.awt.Label label6;
     private java.awt.Label label7;
     private java.awt.Label label8;
+    private java.awt.Label label9;
     private java.awt.Button refreshBtn;
     private java.awt.TextField roomNumberRegister;
     private java.awt.TextField roomNumberUpdate;
     private java.awt.Label statusDisplayHome;
-    private javax.swing.JTextField statusRegister;
+    private java.awt.TextField statusEdit;
+    private java.awt.TextField statusRegister;
     private java.awt.Button submitBtn;
     private java.awt.Button updateBtn;
     // End of variables declaration
