@@ -1,5 +1,4 @@
-
-package com.toy.anagrams.ui;
+package com.alarm.anagrams.ui;
 
 /**
  *

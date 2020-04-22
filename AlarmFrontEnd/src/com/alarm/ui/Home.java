@@ -1,4 +1,4 @@
-package com.toy.anagrams.ui;
+package com.alarm.anagrams.ui;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
