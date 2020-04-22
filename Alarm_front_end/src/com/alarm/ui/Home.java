@@ -477,8 +477,8 @@ public class Home extends javax.swing.JFrame {
         try {
             jsonString = new JSONObject()
                     .put("sensorId", id)
-                    .put("floorNo", roomNumber)
-                    .put("roomNo", floorNumber)
+                    .put("floorNo", floorNumber )
+                    .put("roomNo", roomNumber)
                     .put("active", status).toString();
         } catch (JSONException e) {
             e.printStackTrace();
