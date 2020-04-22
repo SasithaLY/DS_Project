@@ -24,60 +24,61 @@ import org.json.JSONObject;
  */
 public class Login extends javax.swing.JFrame {
 
-    private static String TOKEN_BEARER_TYPE;
-    public static String TOKEN_BEARER;
-    Timer timer = new Timer();
+    private static String TOKEN_BEARER_TYPE; //This is to hold bearer type from JSON.
+    public static String TOKEN_BEARER; //This holds the Admin Token in order to do the updates of alarms.
+    Timer timer = new Timer(); //Timer initialized in order to keep the program updated for every 30 seconds.
 
     public Login() throws Exception {
         initComponents();
-        getAlarmData();
+        getAlarmData(); //The application is being initially received the data by calling this function.
 
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 try {
                     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                    Date date = new Date();
-                    getAlarmData();
-                    labelLogin.setText("Refreshed! " + formatter.format(date));
+                    Date date = new Date(); //This is to inform the user the application is updated in this particular time.
+                    getAlarmData(); // This updates the application every 30 seconds.
+                    labelLogin.setText("Refreshed! " + formatter.format(date)); //This is to inform the user the application is updated.
                 } catch (Exception ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex); //Catch the exceptions if there's any.
                 }
             }
-        }, 0, 30000);
+        }, 0, 30000);// Set the timer to 30 seconds.
     }
 
     public void getAlarmData() throws Exception {
 
-        String url = "http://localhost:8080/api/getSensors";
-        boolean critical = false;
+        String url = "http://localhost:8080/api/getSensors"; //The GET request.
+        boolean critical = false; //Used to take the decision whether to display the critical data information on display.
 
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        URL obj = new URL(url); // URL initialization.
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection(); // HttpURLConnection opens a connection.
 
-        con.setRequestMethod("GET");
+        con.setRequestMethod("GET"); // sets the Method
         con.setRequestProperty("User-Agent", "Mozilla/5.0");
 
-        int responseCode = con.getResponseCode();
+        int responseCode = con.getResponseCode(); //Retrieves the status CODE such as, 200 or 404.
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream())); // Initialized the BufferReader.
         String inputLine;
         StringBuffer response = new StringBuffer();
         while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
+            response.append(inputLine); // Append the string to the response.
         }
-        in.close();
+        in.close(); // Buffer is closed.
 
 
-        ArrayList<Alarm> alarm = new ArrayList<>();
-        alarm = getList(response.toString());
+        ArrayList<Alarm> alarm = new ArrayList<>(); //ArrayList initialization.
+        alarm = getList(response.toString()); //Get all the Alarm details by calling getList method in to an ArrayList.
 
-        DefaultTableModel model = (DefaultTableModel) jTableLogin.getModel();
+        DefaultTableModel model = (DefaultTableModel) jTableLogin.getModel(); //Accessing the Table in the UI.
         model.setRowCount(0);
-        Object rowData[] = new Object[6];
+        Object rowData[] = new Object[6]; //Initial step to add rows to the Table.
         
-        ArrayList<String> criticalAlarmIds = new ArrayList<String>();
+        ArrayList<String> criticalAlarmIds = new ArrayList<String>(); //This stores AlarmIDs which has a critical situation.
 
+        //Here the JSON Array data will be added to the JTable within a for loop.
         for (int i = 0; i < alarm.size(); i++) {
             rowData[0] = alarm.get(i).alarmId;
             rowData[1] = alarm.get(i).status;
@@ -89,20 +90,21 @@ public class Login extends javax.swing.JFrame {
             if (alarm.get(i).smokeLevel > 5 || alarm.get(i).co2Level > 5) {
                 criticalAlarmIds.add(String.valueOf(alarm.get(i).alarmId));
                 critical = true;
-            }
+            } //Checks if there're alarms which are in critical situations and add those to the criticalAlarmIds ArrayList.
 
             if (critical == true) {
-                alertDisplayLogin.setText("Alert! Alarm ID " + criticalAlarmIds + " is/are in Critical Condition!");
+                alertDisplayLogin.setText("Alert! Alarm ID " + criticalAlarmIds + " is/are in Critical Condition!"); //Display the Alert.
             } else {
            
-                alertDisplayLogin.setText("");
+                alertDisplayLogin.setText(""); //Set the alert to none if there's not alarm in critical condition.
             }
 
-            model.addRow(rowData);
+            model.addRow(rowData); //Add rows to the JTable.
         }
 
     }
 
+    //This is used to get the JSON response and derive the JSON array in to separated pieces and add them to the ArrayList.
     public ArrayList<Alarm> getList(String json) {
 
         ArrayList<Alarm> arrayList = new ArrayList<>();
@@ -117,11 +119,12 @@ public class Login extends javax.swing.JFrame {
                 alarmObject.setSmokeLevel(jsonObject.getInt("smoke"));
                 alarmObject.setCo2Level(jsonObject.getInt("co2"));
                 alarmObject.setStatus(jsonObject.getInt("active"));
+                //Taking data from particular Key.
 
-                arrayList.add(alarmObject);
+                arrayList.add(alarmObject); //An object is added to the ArrayList.
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            e.printStackTrace(); //Catches exception if there's any.
         }
         return arrayList;
     }
@@ -290,12 +293,12 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void submitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitActionPerformed
-        String userName = usernameInput.getText().trim();
-        String password = passwordInput.getText().trim();
+        String userName = usernameInput.getText().trim(); //Getting the username from  the admin.
+        String password = passwordInput.getText().trim(); //Getting the password from  the admin.
 
-        statusDisplayLogin.setText("");
+        statusDisplayLogin.setText(""); //This shows the results of the Login Process.
 
-        String jsonString = "";
+        String jsonString = ""; //Creating a method to make a JSONObject.
         try {
             jsonString = new JSONObject()
                     .put("username", userName)
@@ -306,22 +309,22 @@ public class Login extends javax.swing.JFrame {
 
         try {
 
-            Unirest.setTimeouts(0, 0);
-            HttpResponse<String> response = Unirest.post("http://localhost:8080/api/auth/signin")
-                    .header("Content-Type", "application/json")
-                    .body(jsonString)
+            Unirest.setTimeouts(0, 0); //Set the time out.
+            HttpResponse<String> response = Unirest.post("http://localhost:8080/api/auth/signin") //The POST request.
+                    .header("Content-Type", "application/json") //This is required to get this through.
+                    .body(jsonString) //The created JSONObject above, is used here to pass data within the Body.
                     .asString();
 
-            JSONObject myResponse = new JSONObject(response.getBody().toString());
-            if (response.getStatus() == 200) {
-                Login.TOKEN_BEARER = myResponse.getString("accessToken");
-                Login.TOKEN_BEARER_TYPE = myResponse.getString("tokenType");
+            JSONObject myResponse = new JSONObject(response.getBody().toString()); //Getting the response from POST request
+            if (response.getStatus() == 200) { //Checks the status code.
+                Login.TOKEN_BEARER = myResponse.getString("accessToken"); //Getting the Admin Token and save them in static variable.
+                Login.TOKEN_BEARER_TYPE = myResponse.getString("tokenType"); //Getting the Token Type and save them in static variable.
                 statusDisplayLogin.setText("OK");
-                this.setVisible(false);
-                timer.cancel();
-                new Home().setVisible(true);
+                this.setVisible(false); //Make Login Screen Invisible.
+                timer.cancel(); //Cancels the timer initialized in Login class.
+                new Home().setVisible(true); //Opens up the Home for the Admin.
             } else {
-                statusDisplayLogin.setText("Unauthorized!");
+                statusDisplayLogin.setText("Unauthorized!"); //The user is unAuthorized then.
             }
 
         } catch (Exception ex) {
