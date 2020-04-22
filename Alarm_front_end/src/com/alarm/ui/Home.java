@@ -429,8 +429,8 @@ public class Home extends javax.swing.JFrame {
         String jsonString = ""; //Creating a method to make a JSONObject.
         try {
             jsonString = new JSONObject()
-                    .put("floorNo", roomNumber)
-                    .put("roomNo", floorNumber)
+                    .put("floorNo", floorNumber)
+                    .put("roomNo", roomNumber)
                     .put("active", status).toString();
         } catch (JSONException e) {
             e.printStackTrace();
