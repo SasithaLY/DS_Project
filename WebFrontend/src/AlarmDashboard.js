@@ -13,7 +13,7 @@ const getSensorDetails = () => {
 };
 
 const AlarmDashboard = () => {
-    const [alarms, setAlarms] = useState(false);
+    const [alarms, setAlarms] = useState([]);
     const [error, setError] = useState(false);
 
     const loadAlarms = () => {
