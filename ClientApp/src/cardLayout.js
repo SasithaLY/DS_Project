@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const isDanger = (val) => {
     if (val > 5) {
@@ -26,6 +27,11 @@ const Card = ({ alarm }) => {
                     <p>Status: {isStatus(alarm.active)}</p>
                     <p style={isDanger(alarm.smoke)}>Smoke Level: {alarm.smoke}</p>
                     <p style={isDanger(alarm.co2)}>CO2 Level: {alarm.co2}</p>
+                    <Link to={`/admin/updateSensor/${alarm.sensorId}`}>
+                        <button className="btn btn-outline-warning mt-2 mb-2" >
+                            Update Alarm Status
+                        </button>
+                    </Link>
                 </div>
             </div>
         </div>
