@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { API } from './config';
 import { Redirect } from 'react-router-dom';
 
-const updateProduct = ({ match }) => {
+const UpdateAlarm = ({ match }) => {
     const [values, setValues] = useState({
         sensorId: "",
         smoke: "",
@@ -155,4 +155,4 @@ const updateProduct = ({ match }) => {
         );
     }
 
-    export default updateProduct;
+    export default UpdateAlarm;
