@@ -8,7 +8,7 @@ const Routes = () => {
         <BrowserRouter>
             <Switch>
                 <Route path="/" exact component={AlarmDashboard}></Route>
-                <Route path="/admin/updateSensor/:sensorId" exact component={UpdateAlarm}></Route>
+                <Route path="/admin/updateSensor/:sensorId/:smoke/:co2" exact component={UpdateAlarm}></Route>
             </Switch>
         </BrowserRouter>
     );

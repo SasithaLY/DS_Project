@@ -27,7 +27,7 @@ const Card = ({ alarm }) => {
                     <p>Status: {isStatus(alarm.active)}</p>
                     <p style={isDanger(alarm.smoke)}>Smoke Level: {alarm.smoke}</p>
                     <p style={isDanger(alarm.co2)}>CO2 Level: {alarm.co2}</p>
-                    <Link to={`/admin/updateSensor/${alarm.sensorId}`}>
+                    <Link to={`/admin/updateSensor/${alarm.sensorId}/${alarm.smoke}/${alarm.co2}`}>
                         <button className="btn btn-outline-warning mt-2 mb-2" >
                             Update Alarm Status
                         </button>
