@@ -37,7 +37,10 @@ const UpdateAlarm = ({ match }) => {
             headers: {
                 Accept: "application/json"
             },
-            body: JSON.stringify({ sensor })
+            body: JSON.stringify({ 
+                sensorId: sensor.sensorId,
+                smoke: sensor.smoke,
+                co2: sensor.co2 })
         }).then(response => {
                     return response.json();
                 })
