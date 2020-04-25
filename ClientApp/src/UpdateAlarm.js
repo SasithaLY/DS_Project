@@ -31,16 +31,16 @@ const UpdateAlarm = ({ match }) => {
     //         .catch(err => console.log(err));
     // };
 
-    const updateSensor = (sensor) => {
+    const updateSensor = (sensorId, smoke, co2) => {
         return fetch(`${API}/setSensorLevels`, {
             method: "PUT",
             headers: {
-                Accept: "application/json"
+                "Content-Type": "application/json"
             },
             body: JSON.stringify({ 
-                sensorId: sensor.sensorId,
-                smoke: sensor.smoke,
-                co2: sensor.co2 })
+                sensorId: sensorId,
+                smoke: smoke,
+                co2: co2 })
         }).then(response => {
                     return response.json();
                 })
@@ -83,7 +83,7 @@ const UpdateAlarm = ({ match }) => {
             event.preventDefault();
             setValues({ ...values, error: "" });
 
-            updateSensor(formData).then(data => {
+            updateSensor(sensorId, smoke, co2).then(data => {
                 if (data.error) {
                     setValues({ ...values, error: data.error });
                 } else {
