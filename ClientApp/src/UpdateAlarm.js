@@ -37,7 +37,7 @@ const updateProduct = ({ match }) => {
             headers: {
                 Accept: "application/json"
             },
-            body: JSON.stringify({ data })
+            body: JSON.stringify({ sensor })
         }).then(response => {
                     return response.json();
                 })
