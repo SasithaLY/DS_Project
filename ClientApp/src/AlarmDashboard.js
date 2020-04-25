@@ -12,23 +12,30 @@ const getSensorDetails = () => {
         .catch(err => console.log(err));
 };
 
+
+
 const AlarmDashboard = () => {
     const [alarms, setAlarms] = useState([]);
     const [error, setError] = useState(false);
+
 
     const loadAlarms = () => {
         getSensorDetails().then(data => {
             if (data.error) {
                 setError(data.error)
             } else {
-                setAlarms(data)
+                setAlarms(data);
             }
         });
     }
 
     useEffect(() => {
-        loadAlarms()
+        loadAlarms();
     }, [])
+
+      setInterval(function(){
+        window.location.reload(1);
+     }, 40000);
 
     const showError = () => (
         <div className="alert alert-danger" style={{ display: error ? '' : 'none' }}>
@@ -49,9 +56,6 @@ const AlarmDashboard = () => {
                     <Card key={i} alarm={alarm} />
                 ))}
             </div>
-
-            {/* if not working try whether data are coming from the backend
-            {JSON.stringify(alarms)} */}
         </div>
     );
 };

@@ -9,7 +9,6 @@ const UpdateAlarm = ({ match }) => {
         co2: "",
         error: false,
         redirectToDashboard: false,
-        formData: ""
     });
 
     const {
@@ -18,18 +17,7 @@ const UpdateAlarm = ({ match }) => {
         co2,
         error,
         redirectToDashboard,
-        formData
     } = values;
-
-    // const getSensor = sensorId => {
-    //     return fetch(`${API}/admin/getSensor/${sensorId}`, {
-    //         method: "GET"
-    //     })
-    //         .then(response => {
-    //             return response.json();
-    //         })
-    //         .catch(err => console.log(err));
-    // };
 
     const updateSensor = (sensorId, smoke, co2) => {
         return fetch(`${API}/setSensorLevels`, {
@@ -37,52 +25,48 @@ const UpdateAlarm = ({ match }) => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ 
+            body: JSON.stringify({
                 sensorId: sensorId,
                 smoke: smoke,
-                co2: co2 })
-        }).then(response => {
-                    return response.json();
-                })
-                .catch(err => console.log(err));
-        };
-
-        const init = (sensorId, smoke, co2) => {
-            setValues({
-                ...values,
-                sensorId: sensorId,
-                smoke: smoke,
-                co2: co2,
-                formData: new FormData()
+                co2: co2
             })
-            // getSensor(sensorId).then(data => {
-            //     if (data.error) {
-            //         setValues({ ...values, error: data.error })
-            //     } else {
-            //         setValues({
-            //             ...values,
-            //             smoke: data.smoke,
-            //             co2: data.co2,
-            //             formData: new FormData()
-            //         });
-            //     }
-            // });
-        };
+        }).then(response => {
+            return response.json();
+        })
+            .catch(err => console.log(err));
+    };
 
-        useEffect(() => {
-            init(match.params.sensorId, match.params.smoke, match.params.co2);
-        }, []);
+    const init = (sensorId, smoke, co2) => {
+        setValues({
+            ...values,
+            sensorId: sensorId,
+            smoke: smoke,
+            co2: co2,
+        })
+    };
 
-        const handleChange = name => event => {
-            const value = event.target.value;
-            formData.set(name, value);
-            setValues({ ...values, [name]: value });
-        };
+    useEffect(() => {
+        init(match.params.sensorId, match.params.smoke, match.params.co2);
+    }, []);
 
-        const clickSubmit = event => {
-            event.preventDefault();
-            setValues({ ...values, error: "" });
+    const handleChange = name => event => {
+        const value = event.target.value;
+        setValues({ ...values, [name]: value });
+    };
 
+    const clickSubmit = event => {
+        event.preventDefault();
+        setValues({ ...values, error: "" });
+
+        if (smoke > 10 || smoke < 0) {
+            setValues({ ...values, error: "Smoke level must be greater than 0 or less than 10" });
+            showError();
+        }
+        else if (co2 > 10 || co2 < 0) {
+            setValues({ ...values, error: "CO2 level must be greater than 0 or less than 10" });
+            showError();
+        }
+        else {
             updateSensor(sensorId, smoke, co2).then(data => {
                 if (data.error) {
                     setValues({ ...values, error: data.error });
@@ -97,65 +81,74 @@ const UpdateAlarm = ({ match }) => {
                     });
                 }
             });
-        };
+        }
+    };
 
-        const newPostForm = () => (
-            <form className="mb-3" onSubmit={clickSubmit}>
+    const newPostForm = () => (
+        <form className="mb-3" onSubmit={clickSubmit}>
 
-                <div className="form-group">
-                    <label className="text-muted">Sensor Status</label>
-                    <input
-                        onChange={handleChange("sensorId")}
-                        type="number"
-                        className="form-control"
-                        value={sensorId} />
-                </div>
+            <h2>Update Sensor Status</h2> <br />
 
-                <div className="form-group">
-                    <label className="text-muted">Sensor Status</label>
-                    <input
-                        onChange={handleChange("smoke")}
-                        type="number"
-                        className="form-control"
-                        value={smoke} />
-                </div>
-
-                <div className="form-group">
-                    <label className="text-muted">Sensor Status</label>
-                    <input
-                        onChange={handleChange("co2")}
-                        type="number"
-                        className="form-control"
-                        value={co2} />
-                </div>
-
-                <button className="btn btn-outline-warning">Update Sensor</button>
-            </form>
-        );
-
-        const showError = () => (
-            <div className="alert alert-danger" style={{ display: error ? '' : 'none' }}>
-                {error}
+            <div className="form-group">
+                <label className="text-muted">Sensor Status</label>
+                <input
+                    type="number"
+                    className="form-control"
+                    value={sensorId}
+                    disabled={true} />
             </div>
-        );
 
-        const redirect = () => {
-            if (redirectToDashboard) {
-                if (!error) {
-                    return <Redirect to="/" />
-                }
+            <div className="form-group">
+                <label className="text-muted">Sensor Status</label>
+                <input
+                    onChange={handleChange("smoke")}
+                    type="number"
+                    className="form-control"
+                    value={smoke} />
+            </div>
+
+            <div className="form-group">
+                <label className="text-muted">Sensor Status</label>
+                <input
+                    onChange={handleChange("co2")}
+                    type="number"
+                    className="form-control"
+                    value={co2} />
+            </div>
+
+            <button className="btn btn-dark">Update Sensor</button>
+        </form>
+    );
+
+    const showError = () => (
+        <div className="alert alert-danger" style={{ display: error ? '' : 'none' }}>
+            {error}
+        </div>
+    );
+
+    const redirect = () => {
+        if (redirectToDashboard) {
+            if (!error) {
+                return <Redirect to="/" />
             }
         }
-
-        return (
-            <div className="row">
-                <div className="col-md-8 offset-md-2">
-                    {showError()}
-                    {newPostForm()}
-                    {redirect()}
-                </div>
-            </div>
-        );
     }
 
-    export default UpdateAlarm;
+    return (
+        <div className="row">
+            <div className="col-md-8 offset-md-2">
+                <div className="container-fluid">
+                    <div className="jumbotron">
+                        {showError()}
+                        {newPostForm()}
+                        {redirect()}
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    );
+}
+
+export default UpdateAlarm;
