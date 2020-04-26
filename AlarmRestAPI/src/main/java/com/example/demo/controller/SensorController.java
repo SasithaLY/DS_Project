@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entity.Sensor;
+import com.example.demo.entity.User;
+import com.example.demo.mail.service.SmsService;
 import com.example.demo.service.SensorService;
+import com.example.demo.service.UserService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -24,37 +28,37 @@ public class SensorController {
 	
 	@PostMapping("/api/admin/addSensor")
 	public Sensor addSensor(@RequestBody Sensor sensor) {
-		
+
 		return sensorService.saveSensor(sensor);
 	}
-	
+
 	@GetMapping("/api/getSensors")
-	public List<Sensor> getAllSensors(){
-		
+	public List<Sensor> getAllSensors() {
+
 		return sensorService.getAllSensors();
 	}
-	
+
 	@GetMapping("/api/admin/getSensor/{id}")
 	public Sensor getSensorById(@PathVariable int id) {
-		
+
 		return sensorService.getSensorById(id);
 	}
-	
+
 	@PutMapping("/api/admin/updateSensor")
 	public Sensor updateSensor(@RequestBody Sensor sensor) {
-		
+
 		return sensorService.updateSensor(sensor);
 	}
-	
+
 	@DeleteMapping("/api/admin/deleteSensor/{id}")
 	public String deleteSensor(@PathVariable int id) {
-		
+
 		return sensorService.deleteSensor(id);
 	}
-	
+
 	@PutMapping("/api/setSensorLevels")
 	public int setSensorLevels(@RequestBody Sensor sensor) {
-		
+
 		return sensorService.setSensorLevels(sensor);
 	}
 }

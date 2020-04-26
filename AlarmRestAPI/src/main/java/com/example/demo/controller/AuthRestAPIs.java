@@ -65,7 +65,7 @@ public class AuthRestAPIs {
  
         // Creating user's account
         User user = new User(signUpRequest.getUsername(),
-               encoder.encode(signUpRequest.getPassword()), signUpRequest.getRole(), signUpRequest.isActive());
+               encoder.encode(signUpRequest.getPassword()), signUpRequest.getRole(), signUpRequest.getPhone(), signUpRequest.getEmail(), signUpRequest.isActive());
 
         userRepository.save(user);
  

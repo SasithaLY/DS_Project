@@ -41,6 +41,7 @@ public class Sensor {
 	public int getSensorId() {
 		return sensorId;
 	}
+	
 	public void setSensorId(int sensorId) {
 		this.sensorId = sensorId;
 	}

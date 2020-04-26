@@ -20,4 +20,8 @@ public interface Service extends Remote {
     public String[] updateAlarmSensor(String jsonDetails, String token) throws RemoteException;
     
     public void getResponseFromApi()throws RemoteException;
+
+    public String[] sendSMS(String message) throws RemoteException;
+
+	public String[] sendEmail(String message) throws RemoteException;
 }

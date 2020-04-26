@@ -30,14 +30,22 @@ public class User {
     @Column(name = "role")
 	private String role;
     
+    @Column(name = "phone")
+	private String phone;
+    
+    @Column(name = "email")
+	private String email;
+
 	@Column(name = "active")
 	private boolean active;
 
-	public User(String username, String password, String role, boolean active) {
+	public User(String username, String password, String role, String phone, String email, boolean active) {
 	
 		this.username = username;
 		this.password = password;
 		this.role = role;
+		this.phone = phone;
+		this.email = email;
 		this.active = active;
 	}
 
@@ -80,6 +88,25 @@ public class User {
 		this.role = role;
 	}
 
+	
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
 	public boolean isActive() {
 		return active;
 	}
