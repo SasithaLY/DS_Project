@@ -67,20 +67,33 @@ const UpdateAlarm = ({ match }) => {
             showError();
         }
         else {
-            updateSensor(sensorId, smoke, co2).then(data => {
-                if (data.error) {
-                    setValues({ ...values, error: data.error });
-                } else {
-                    setValues({
-                        ...values,
-                        sensorId: "",
-                        smoke: "",
-                        co2: "",
-                        error: false,
-                        redirectToDashboard: true
-                    });
-                }
+            setTimeout(() => {
+                updateSensor(sensorId, smoke, co2)
+              }, 10000);
+            
+            setValues({
+                ...values,
+                sensorId: "",
+                smoke: "",
+                co2: "",
+                error: false,
+                redirectToDashboard: true
             });
+
+            // updateSensor(sensorId, smoke, co2).then(data => {
+            //     if (data.error) {
+            //         setValues({ ...values, error: data.error });
+            //     } else {
+            //         setValues({
+            //             ...values,
+            //             sensorId: "",
+            //             smoke: "",
+            //             co2: "",
+            //             error: false,
+            //             redirectToDashboard: true
+            //         });
+            //     }
+            // });
         }
     };
 

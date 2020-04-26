@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 const isDanger = (val) => {
     if (val > 5) {
@@ -15,12 +15,17 @@ const isStatus = (val) => {
     }
 };
 
+const isInactive = (val) => {
+    if (!val) {      
+        return { color: "#C6C6C6" }
+    }
+};
 
 const Card = ({ alarm }) => {
     return (
         <div className="col-4 mb-3">
-            <div className="card">
-                <div className="card-header">Floor No: {alarm.floorNo} - Room No: {alarm.roomNo}</div>
+            <div className="card" style={isInactive(alarm.active)}>
+                <div className="card-header" style={isDanger(alarm.co2) || isDanger(alarm.smoke)}>Floor No: {alarm.floorNo} - Room No: {alarm.roomNo}</div>
                 <div className="card-body">
                     <p>Sensor Id: {alarm.sensorId}</p>
                     <p>Status: {isStatus(alarm.active)}</p>
