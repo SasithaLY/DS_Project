@@ -44,7 +44,7 @@
                       <Component id="jPanel4" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="jPanel3" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -87,7 +87,9 @@
                           </Group>
                           <Group type="102" attributes="0">
                               <Component id="label1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="274" max="32767" attributes="0"/>
+                              <EmptySpace pref="31" max="32767" attributes="0"/>
+                              <Component id="errorInsert" min="-2" pref="199" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -99,7 +101,10 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="roomNumberRegister" max="32767" attributes="0"/>
                                   <Component id="floorNumberRegister" max="32767" attributes="0"/>
-                                  <Component id="statusRegister" alignment="0" max="32767" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="cmbInsertStatus" min="-2" pref="100" max="-2" attributes="0"/>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                       </Group>
@@ -117,7 +122,11 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="label3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="roomNumberRegister" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="errorInsert" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="roomNumberRegister" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -127,7 +136,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="label8" min="-2" max="-2" attributes="0"/>
-                          <Component id="statusRegister" min="-2" max="-2" attributes="0"/>
+                          <Component id="cmbInsertStatus" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="submitBtn" min="-2" max="-2" attributes="0"/>
@@ -145,7 +154,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Dialog" size="12" style="1"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Register a new Alarm"/>
+                <Property name="text" type="java.lang.String" value="Register a new Alarm Sensor"/>
               </Properties>
             </Component>
             <Component class="java.awt.Button" name="submitBtn">
@@ -175,7 +184,27 @@
                 <Property name="text" type="java.lang.String" value="Status:"/>
               </Properties>
             </Component>
-            <Component class="java.awt.TextField" name="statusRegister">
+            <Component class="javax.swing.JComboBox" name="cmbInsertStatus">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="Inactive"/>
+                    <StringItem index="1" value="Active"/>
+                  </StringArray>
+                </Property>
+                <Property name="selectedIndex" type="int" value="1"/>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="errorInsert">
+              <Properties>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="0" green="0" red="ff" type="rgb"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Error! Check Inputs."/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>
@@ -193,23 +222,31 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                              <Component id="errorDelete" min="-2" pref="147" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="btnDelete" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                               <Component id="updateBtn" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="label2" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="label7" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="label5" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="label6" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="label9" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="label2" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="idUpdate" max="32767" attributes="0"/>
                                   <Component id="roomNumberUpdate" alignment="0" max="32767" attributes="0"/>
                                   <Component id="floorNumberUpdate" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="statusEdit" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="updateError" max="32767" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="cmbUpdateStatus" min="-2" pref="100" max="-2" attributes="0"/>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                       </Group>
@@ -223,7 +260,10 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="label2" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="label2" min="-2" max="-2" attributes="0"/>
+                                  <Component id="updateError" min="-2" max="-2" attributes="0"/>
+                              </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Group type="102" attributes="0">
@@ -242,12 +282,16 @@
                                   <Component id="floorNumberUpdate" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="statusEdit" min="-2" max="-2" attributes="0"/>
+                              <Component id="cmbUpdateStatus" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="label9" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="23" max="32767" attributes="0"/>
-                      <Component id="updateBtn" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="40" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="updateBtn" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="errorDelete" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnDelete" alignment="1" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -259,7 +303,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Dialog" size="12" style="1"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Edit an Alarm"/>
+                <Property name="text" type="java.lang.String" value="Edit an Alarm Sensor"/>
               </Properties>
             </Component>
             <Component class="java.awt.Button" name="updateBtn">
@@ -286,17 +330,60 @@
               </Properties>
             </Component>
             <Component class="java.awt.TextField" name="idUpdate">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="enabled" type="boolean" value="false"/>
+              </Properties>
             </Component>
             <Component class="java.awt.TextField" name="roomNumberUpdate">
             </Component>
             <Component class="java.awt.TextField" name="floorNumberUpdate">
             </Component>
-            <Component class="java.awt.TextField" name="statusEdit">
-            </Component>
             <Component class="java.awt.Label" name="label9">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Status:"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="cmbUpdateStatus">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="Inactive"/>
+                    <StringItem index="1" value="Active"/>
+                  </StringArray>
+                </Property>
+                <Property name="selectedIndex" type="int" value="1"/>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="updateError">
+              <Properties>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="0" green="0" red="ff" type="rgb"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Error! Check Inputs."/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="errorDelete">
+              <Properties>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="0" green="0" red="ff" type="rgb"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Please Select a Sensor"/>
+              </Properties>
+            </Component>
+            <Component class="java.awt.Button" name="btnDelete">
+              <Properties>
+                <Property name="label" type="java.lang.String" value="Delete"/>
+              </Properties>
+              <AccessibilityProperties>
+                <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="btnDelete"/>
+              </AccessibilityProperties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -313,7 +400,7 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane8" max="32767" attributes="0"/>
+                          <Component id="jScrollPane8" pref="846" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="alertDisplayHome" pref="734" max="32767" attributes="0"/>
@@ -357,10 +444,10 @@
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="6" rowCount="0">
-                        <Column editable="false" title="Alarm Id" type="java.lang.Integer"/>
-                        <Column editable="false" title="Status" type="java.lang.String"/>
-                        <Column editable="false" title="Floor Number" type="java.lang.Integer"/>
-                        <Column editable="false" title="Room Number" type="java.lang.Integer"/>
+                        <Column editable="false" title="Alarm Id" type="java.lang.Object"/>
+                        <Column editable="false" title="Status" type="java.lang.Object"/>
+                        <Column editable="false" title="Floor Number" type="java.lang.Object"/>
+                        <Column editable="false" title="Room Number" type="java.lang.Object"/>
                         <Column editable="false" title="Smoke Level" type="java.lang.Object"/>
                         <Column editable="false" title="CO2 Level" type="java.lang.Object"/>
                       </Table>
@@ -403,6 +490,9 @@
                       <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTable8MouseClicked"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>

@@ -1,6 +1,8 @@
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
+import java.awt.Color;
+import java.awt.Component;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -12,6 +14,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,6 +33,9 @@ public class Home extends javax.swing.JFrame {
 
     public Home() {
         initComponents();
+        updateError.setVisible(false);
+        errorInsert.setVisible(false);
+        errorDelete.setVisible(false);
         try {
             getAlarmData();
         } catch (Exception ex) {
@@ -48,6 +55,35 @@ public class Home extends javax.swing.JFrame {
                 }
             }
         }, 0, 5000);
+
+        jTable8.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table,
+                    Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+
+                int co2 = (int) table.getModel().getValueAt(row, 5);
+                int smoke = (int) table.getModel().getValueAt(row, 4);
+                String status = (String) table.getModel().getValueAt(row, 1);
+
+                if (smoke > 5 || co2 > 5) {
+
+                    setBackground(new Color(255, 191, 191));
+                    setForeground(Color.BLACK);
+                } else {
+                    setBackground(new Color(191, 255, 191));
+                    setForeground(table.getForeground());
+                }
+
+                if (status == "Inactive") {
+                    setBackground(new Color(226, 226, 226));
+                    setForeground(Color.BLACK);
+                }
+
+                return c;
+            }
+        });
     }
 
     public void getAlarmData() throws Exception {
@@ -68,7 +104,12 @@ public class Home extends javax.swing.JFrame {
         //Here the JSON Array data will be added to the JTable within a for loop.
         for (int i = 0; i < alarm.size(); i++) {
             rowData[0] = alarm.get(i).alarmId;
-            rowData[1] = alarm.get(i).status;
+            if (alarm.get(i).status == 1) {
+                rowData[1] = "Active";
+            } else {
+                rowData[1] = "Inactive";
+            }
+
             rowData[2] = alarm.get(i).floorNumber;
             rowData[3] = alarm.get(i).roomNumber;
             rowData[4] = alarm.get(i).smokeLevel;
@@ -129,7 +170,8 @@ public class Home extends javax.swing.JFrame {
         roomNumberRegister = new java.awt.TextField();
         floorNumberRegister = new java.awt.TextField();
         label8 = new java.awt.Label();
-        statusRegister = new java.awt.TextField();
+        cmbInsertStatus = new javax.swing.JComboBox<>();
+        errorInsert = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         label2 = new java.awt.Label();
         updateBtn = new java.awt.Button();
@@ -139,8 +181,11 @@ public class Home extends javax.swing.JFrame {
         idUpdate = new java.awt.TextField();
         roomNumberUpdate = new java.awt.TextField();
         floorNumberUpdate = new java.awt.TextField();
-        statusEdit = new java.awt.TextField();
         label9 = new java.awt.Label();
+        cmbUpdateStatus = new javax.swing.JComboBox<>();
+        updateError = new javax.swing.JLabel();
+        errorDelete = new javax.swing.JLabel();
+        btnDelete = new java.awt.Button();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane8 = new javax.swing.JScrollPane();
         jTable8 = new javax.swing.JTable();
@@ -154,7 +199,7 @@ public class Home extends javax.swing.JFrame {
 
         label1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         label1.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        label1.setText("Register a new Alarm");
+        label1.setText("Register a new Alarm Sensor");
 
         submitBtn.setLabel("Submit");
         submitBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -169,6 +214,12 @@ public class Home extends javax.swing.JFrame {
 
         label8.setText("Status:");
 
+        cmbInsertStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Inactive", "Active" }));
+        cmbInsertStatus.setSelectedIndex(1);
+
+        errorInsert.setForeground(new java.awt.Color(255, 0, 0));
+        errorInsert.setText("Error! Check Inputs.");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -181,7 +232,9 @@ public class Home extends javax.swing.JFrame {
                         .addComponent(submitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 274, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                        .addComponent(errorInsert, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -191,7 +244,9 @@ public class Home extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(roomNumberRegister, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(floorNumberRegister, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(statusRegister, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(cmbInsertStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -203,7 +258,10 @@ public class Home extends javax.swing.JFrame {
                         .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(roomNumberRegister, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(errorInsert)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(roomNumberRegister, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(label4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -211,7 +269,7 @@ public class Home extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(label8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(statusRegister, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbInsertStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(submitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -220,7 +278,7 @@ public class Home extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
         label2.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        label2.setText("Edit an Alarm");
+        label2.setText("Edit an Alarm Sensor");
 
         updateBtn.setLabel("Update");
         updateBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -235,7 +293,26 @@ public class Home extends javax.swing.JFrame {
 
         label7.setText("ID:");
 
+        idUpdate.setEditable(false);
+        idUpdate.setEnabled(false);
+
         label9.setText("Status:");
+
+        cmbUpdateStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Inactive", "Active" }));
+        cmbUpdateStatus.setSelectedIndex(1);
+
+        updateError.setForeground(new java.awt.Color(255, 0, 0));
+        updateError.setText("Error! Check Inputs.");
+
+        errorDelete.setForeground(new java.awt.Color(255, 0, 0));
+        errorDelete.setText("Please Select a Sensor");
+
+        btnDelete.setLabel("Delete");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -245,21 +322,28 @@ public class Home extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(31, 31, 31)
+                        .addComponent(errorDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(23, 23, 23)
                         .addComponent(updateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(label7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(label5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(label6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(label9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(label9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(13, 13, 13)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(idUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(roomNumberUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(floorNumberUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(statusEdit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(updateError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(cmbUpdateStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -268,7 +352,9 @@ public class Home extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(updateError))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
@@ -283,12 +369,17 @@ public class Home extends javax.swing.JFrame {
                             .addComponent(label6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(floorNumberUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(statusEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cmbUpdateStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(label9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                .addComponent(updateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(updateBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(errorDelete, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnDelete, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
+
+        btnDelete.getAccessibleContext().setAccessibleName("btnDelete");
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -300,19 +391,17 @@ public class Home extends javax.swing.JFrame {
                 "Alarm Id", "Status", "Floor Number", "Room Number", "Smoke Level", "CO2 Level"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class
-            };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false
             };
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        jTable8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable8MouseClicked(evt);
             }
         });
         jScrollPane8.setViewportView(jTable8);
@@ -337,7 +426,7 @@ public class Home extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane8)
+                    .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 846, Short.MAX_VALUE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(alertDisplayHome, javax.swing.GroupLayout.DEFAULT_SIZE, 734, Short.MAX_VALUE)
@@ -371,7 +460,7 @@ public class Home extends javax.swing.JFrame {
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -402,104 +491,156 @@ public class Home extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     //This is to register an Alarm. Accessible only within Admin.
     private void submitBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitBtnActionPerformed
-        String roomNumber = roomNumberRegister.getText(); //Getting the roomNumber from  the admin.
-        String floorNumber = floorNumberRegister.getText(); //Getting the floorNumber from  the admin.
-        String status = statusRegister.getText(); //Getting the status from  the admin.
+        if (validateInsertInputs()) {
+            errorInsert.setVisible(false);
 
-        String jsonString = ""; //Creating a method to make a JSONObject.
-        try {
-            jsonString = new JSONObject()
-                    .put("floorNo", floorNumber)
-                    .put("roomNo",  roomNumber)
-                    .put("active", status).toString();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        String[] response = new String[3];
+            String roomNumber = roomNumberRegister.getText(); //Getting the roomNumber from  the admin.
+            String floorNumber = floorNumberRegister.getText(); //Getting the floorNumber from  the admin.   
+            int status = cmbInsertStatus.getSelectedIndex(); //Getting the status from  the admin.
 
-        try {
-            response = service.addAlarmSensor(jsonString, AdminToken);
-        } catch (RemoteException ex) {
-            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Date date = new Date();//This is used to identify Admin that a particular action happened on this time.
-
-        if (response[0].equals("200")) {
+            String jsonString = ""; //Creating a method to make a JSONObject.
             try {
-                service.getResponseFromApi();
-                getAlarmData();
+                jsonString = new JSONObject()
+                        .put("floorNo", floorNumber)
+                        .put("roomNo", roomNumber)
+                        .put("active", status).toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            String[] response = new String[3];
+
+            try {
+                response = service.addAlarmSensor(jsonString, AdminToken);
             } catch (RemoteException ex) {
                 Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (Exception ex) {
-                Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            statusDisplayHome.setText("Sensor Successfully Registered! " + formatter.format(date));  //Getting the POST response and display success.
-            roomNumberRegister.setText(""); //Setting blanks to the inputs.
-            floorNumberRegister.setText(""); //Setting blanks to the inputs.
-            statusRegister.setText(""); //Setting blanks to the inputs.
-
-            try {
-                this.getAlarmData();
-            } catch (Exception ex) {
-                Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-        } else if (!response[0].equals("200")) {
-            statusDisplayHome.setText("Error in Sensor Register! " + formatter.format(date)); //Show this if JSON responded an error.
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Date date = new Date();//This is used to identify Admin that a particular action happened on this time.
+
+            if (response[0].equals("200")) {
+                try {
+                    service.getResponseFromApi();
+                    getAlarmData();
+                } catch (RemoteException ex) {
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                statusDisplayHome.setText("Sensor Successfully Registered! " + formatter.format(date));  //Getting the POST response and display success.
+                roomNumberRegister.setText(""); //Setting blanks to the inputs.
+                floorNumberRegister.setText(""); //Setting blanks to the inputs.
+                cmbInsertStatus.setSelectedIndex(1); //set the default status
+
+                try {
+                    this.getAlarmData();
+                } catch (Exception ex) {
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            } else if (!response[0].equals("200")) {
+                statusDisplayHome.setText("Error in Sensor Register! " + formatter.format(date)); //Show this if JSON responded an error.
+            }
+        } else {
+            errorInsert.setVisible(true);
         }
-
     }//GEN-LAST:event_submitBtnActionPerformed
 
     //This method is to perform the Alarm update task.
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
-        String id = idUpdate.getText().trim(); //Getting the id from  the admin.
-        String roomNumber = roomNumberUpdate.getText().trim(); //Getting the roomNumber from  the admin.
-        String floorNumber = floorNumberUpdate.getText().trim(); //Getting the floorNumber from  the admin.
-        String status = statusEdit.getText().trim(); //Getting the status from  the admin.
+        if (validateUpdateInputs()) {
+            updateError.setVisible(false);
 
-        String jsonString = ""; //As mentioned earlier this is used to create a JSON Object.
-        try {
-            jsonString = new JSONObject()
-                    .put("sensorId", id)
-                    .put("floorNo", floorNumber)
-                    .put("roomNo", roomNumber)
-                    .put("active", status).toString();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+            String id = idUpdate.getText().trim(); //Getting the id from  the admin.
+            String roomNumber = roomNumberUpdate.getText().trim(); //Getting the roomNumber from  the admin.
+            String floorNumber = floorNumberUpdate.getText().trim(); //Getting the floorNumber from  the admin.
+            //String status = statusEdit.getText().trim(); //Getting the status from  the admin.
+            int status = cmbUpdateStatus.getSelectedIndex();
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Date date = new Date();
+            String jsonString = ""; //As mentioned earlier this is used to create a JSON Object.
+            try {
+                jsonString = new JSONObject()
+                        .put("sensorId", id)
+                        .put("floorNo", floorNumber)
+                        .put("roomNo", roomNumber)
+                        .put("active", status).toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-        String[] response = new String[3];
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Date date = new Date();
 
-        try {
-            response = service.updateAlarmSensor(jsonString, AdminToken);
-        } catch (RemoteException ex) {
-            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        if (response[0].equals("200")) {
-            statusDisplayHome.setText("Sensor Successfully Updated! " + formatter.format(date)); //Display Success Message.
-            idUpdate.setText(""); //Clean the inputs
-            roomNumberUpdate.setText(""); //Clean the inputs
-            floorNumberUpdate.setText(""); //Clean the inputs
-            statusEdit.setText(""); //Clean the inputs
+            String[] response = new String[3];
 
             try {
-                service.getResponseFromApi();
-                getAlarmData();
-            } catch (Exception ex) {
+                response = service.updateAlarmSensor(jsonString, AdminToken);
+            } catch (RemoteException ex) {
                 Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-        } else if (!response[0].equals("200")) {
-            statusDisplayHome.setText("Error in Sensor Register! " + formatter.format(date));
+            if (response[0].equals("200")) {
+                statusDisplayHome.setText("Sensor Successfully Updated! " + formatter.format(date)); //Display Success Message.
+                idUpdate.setText(""); //Clean the inputs
+                roomNumberUpdate.setText(""); //Clean the inputs
+                floorNumberUpdate.setText(""); //Clean the inputs
+                cmbUpdateStatus.setSelectedIndex(1); //Clean the inputs
+
+                try {
+                    service.getResponseFromApi();
+                    getAlarmData();
+                } catch (Exception ex) {
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            } else if (!response[0].equals("200")) {
+                statusDisplayHome.setText("Error in Sensor Update! " + formatter.format(date));
+            }
+        } else {
+            updateError.setVisible(true);
         }
 
+
     }//GEN-LAST:event_updateBtnActionPerformed
+
+    public boolean validateUpdateInputs() {
+
+        int count = 0;
+
+        if (idUpdate.getText().toString().isEmpty()) {
+            count++;
+        }
+        if ((roomNumberUpdate.getText().toString().isEmpty()) || (!roomNumberUpdate.getText().matches("[0-9]+"))) {
+            count++;
+        }
+        if ((floorNumberUpdate.getText().toString().isEmpty()) || (!floorNumberUpdate.getText().matches("[0-9]+"))) {
+            count++;
+        }
+
+        if (count > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean validateInsertInputs() {
+
+        int count = 0;
+
+        if ((roomNumberRegister.getText().toString().isEmpty()) || (!roomNumberRegister.getText().matches("[0-9]+"))) {
+            count++;
+        }
+        if ((floorNumberRegister.getText().toString().isEmpty()) || (!floorNumberRegister.getText().matches("[0-9]+"))) {
+            count++;
+        }
+
+        if (count > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     //This method is to manually refresh the feed. Other than the 30 seconds automatic refresh.
     private void refreshBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshBtnActionPerformed
@@ -518,6 +659,70 @@ public class Home extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_refreshBtnActionPerformed
 
+    private void jTable8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable8MouseClicked
+
+        DefaultTableModel model = (DefaultTableModel) jTable8.getModel();
+
+        int rowIndex = jTable8.getSelectedRow();
+
+        idUpdate.setText(model.getValueAt(rowIndex, 0).toString());
+        if (model.getValueAt(rowIndex, 1).toString() == "Active") {
+            cmbUpdateStatus.setSelectedIndex(1);
+        } else {
+            cmbUpdateStatus.setSelectedIndex(0);
+        }
+        //cmbUpdateStatus.setSelectedIndex(Integer.parseInt(model.getValueAt(rowIndex, 1).toString()));
+        floorNumberUpdate.setText(model.getValueAt(rowIndex, 2).toString());
+        roomNumberUpdate.setText(model.getValueAt(rowIndex, 3).toString());
+
+
+    }//GEN-LAST:event_jTable8MouseClicked
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        String id = idUpdate.getText().toString();
+
+        if (!id.isEmpty()) {
+            errorDelete.setVisible(false);
+            String[] response = new String[3];
+
+            try {
+                response = service.deleteAlarmSensor(id, AdminToken);
+            } catch (RemoteException ex) {
+                Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Date date = new Date();//This is used to identify Admin that a particular action happened on this time.
+
+            if (response[0].equals("200")) {
+                try {
+                    service.getResponseFromApi();
+                    getAlarmData();
+                } catch (RemoteException ex) {
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                statusDisplayHome.setText("Sensor Deleted Successfully! " + formatter.format(date));  //Getting the POST response and display success.
+                idUpdate.setText("");
+                roomNumberUpdate.setText(""); //Setting blanks to the inputs.
+                floorNumberUpdate.setText(""); //Setting blanks to the inputs.
+                cmbUpdateStatus.setSelectedIndex(1); //set the default status
+
+                try {
+                    this.getAlarmData();
+                } catch (Exception ex) {
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            } else if (!response[0].equals("200")) {
+                statusDisplayHome.setText("Error in Sensor Register! " + formatter.format(date)); //Show this if JSON responded an error.
+            }
+        }else{
+            errorDelete.setVisible(true);
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
     public static void main(String args[]) {
 
         AdminToken = args[0];
@@ -526,7 +731,6 @@ public class Home extends javax.swing.JFrame {
 
         try {
             service = (Service) Naming.lookup("//localhost/AlarmService");
-
 
             service.returnAlarmDataFromApi();
 
@@ -547,6 +751,11 @@ public class Home extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Label alertDisplayHome;
+    private java.awt.Button btnDelete;
+    private javax.swing.JComboBox<String> cmbInsertStatus;
+    private javax.swing.JComboBox<String> cmbUpdateStatus;
+    private javax.swing.JLabel errorDelete;
+    private javax.swing.JLabel errorInsert;
     private java.awt.TextField floorNumberRegister;
     private java.awt.TextField floorNumberUpdate;
     private java.awt.TextField idUpdate;
@@ -569,9 +778,8 @@ public class Home extends javax.swing.JFrame {
     private java.awt.TextField roomNumberRegister;
     private java.awt.TextField roomNumberUpdate;
     private java.awt.Label statusDisplayHome;
-    private java.awt.TextField statusEdit;
-    private java.awt.TextField statusRegister;
     private java.awt.Button submitBtn;
     private java.awt.Button updateBtn;
+    private javax.swing.JLabel updateError;
     // End of variables declaration//GEN-END:variables
 }
