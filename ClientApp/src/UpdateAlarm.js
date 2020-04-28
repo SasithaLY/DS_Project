@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { API } from './config';
+import React, {useEffect, useState} from 'react';
+import {API} from './config';
 
-const UpdateAlarm = ({ match }) => {
+const UpdateAlarm = ({match}) => {
     const [values, setValues] = useState({
         sensorId: "",
         smoke: "",
@@ -18,7 +18,39 @@ const UpdateAlarm = ({ match }) => {
         success
     } = values;
 
-    const updateSensor = (sensorId, smoke, co2) => {
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+
+            setValues({...values, error: "", success: ""});
+
+            if (smoke > 10 || smoke < 0) {
+                setValues({...values, error: "Smoke level must be between 0 and 10", success: ""});
+            } else if (co2 > 10 || co2 < 0) {
+                setValues({...values, error: "CO2 level must be between 0 and 10", success: ""});
+            } else {
+                updateSensor(values).then(data => {
+                    if (data.error) {
+                        setValues({...values, error: data.error, success: false});
+                    } else {
+                        setValues({
+                            ...values,
+                            sensorId: values.sensorId,
+                            smoke: values.smoke,
+                            co2: values.co2,
+                            error: false,
+                        });
+                        setValues({...values, error: false, success: "Sensor Values Automatically Updated!"});
+
+                    }
+                });
+            }
+        }, 10000);
+        return () => clearInterval(interval);
+    });
+
+    const updateSensor = () => {
+        console.log(values);
         return fetch(`${API}/setSensorLevels`, {
             method: "PUT",
             headers: {
@@ -45,93 +77,80 @@ const UpdateAlarm = ({ match }) => {
     };
 
     useEffect(() => {
+        console.log("here");
         init(match.params.sensorId, match.params.smoke, match.params.co2);
     }, []);
 
-    const handleChange = name => event => {
+    const handleChange = (event) => {
         const value = event.target.value;
-        setValues({ ...values, [name]: value });
+        const name = event.target.name;
+        setValues({...values, [name]: value});
+        console.log(values);
     };
+
 
     const clickSubmit = event => {
         event.preventDefault();
-        setValues({ ...values, error: "" });
+        setValues({...values, error: ""});
+        setValues({...values, error: "", success: ""});
 
         if (smoke > 10 || smoke < 0) {
-            setValues({ ...values, error: "Smoke level must be greater than 0 or less than 10" });
-        }
-        else if (co2 > 10 || co2 < 0) {
-            setValues({ ...values, error: "CO2 level must be greater than 0 or less than 10" });
-        }
-        else {
-            // setTimeout(() => {
-            //     updateSensor(sensorId, smoke, co2)
-            //   }, 10000);
-
-            // setValues({
-            //     ...values,
-            //     sensorId: "",
-            //     smoke: "",
-            //     co2: "",
-            //     error: false,
-            //     redirectToDashboard: true
-            // });
-
-            updateSensor(sensorId, smoke, co2).then(data => {
+            setValues({...values, error: "Smoke level must be between 0 and 10"});
+        } else if (co2 > 10 || co2 < 0) {
+            setValues({...values, error: "CO2 level must be between 0 and 10"});
+        } else {
+            updateSensor(values).then(data => {
                 if (data.error) {
-                    setValues({ ...values, error: data.error, success: false });
+                    setValues({...values, error: data.error, success: false});
                 } else {
                     setValues({
                         ...values,
-                        sensorId: sensorId,
-                        smoke: smoke,
-                        co2: co2,
+                        sensorId: values.sensorId,
+                        smoke: values.smoke,
+                        co2: values.co2,
                         error: false,
                     });
-                    setValues({ ...values, error: false, success: "Sensor Values Updated!" });
-                    setTimeout(() => {
-                        setValues({ ...values, error: false, success: false });
-                    }, 2000);
+                    setValues({...values, error: false, success: "Sensor Values Updated!"});
+
                 }
             });
         }
     };
 
 
-
-
-    const newPostForm = () => (
+    const newPostForm = (values) => (
         <form className="mb-3" onSubmit={clickSubmit}>
 
-            <h2>Update Sensor Status</h2> <br />
-
             <div className="form-group">
-                <label className="text-muted">Sensor Status</label>
+                <label className="text-muted">Sensor ID</label>
                 <input
                     type="number"
                     className="form-control"
-                    value={sensorId}
-                    disabled={true} />
+                    value={values.sensorId}
+                    name="sensorId"
+                    disabled={true}/>
             </div>
 
             <div className="form-group">
-                <label className="text-muted">Sensor Status</label>
+                <label className="text-muted">Smoke Status</label>
                 <input
-                    onChange={handleChange("smoke")}
+                    onChange={handleChange}
                     type="number"
                     className="form-control"
                     min="0" max="10"
-                    value={smoke} />
+                    name="smoke"
+                    value={values.smoke}/>
             </div>
 
             <div className="form-group">
-                <label className="text-muted">Sensor Status</label>
+                <label className="text-muted">CO2 Status</label>
                 <input
-                    onChange={handleChange("co2")}
+                    onChange={handleChange}
                     type="number"
                     className="form-control"
                     min="0" max="10"
-                    value={co2} />
+                    name="co2"
+                    value={values.co2}/>
             </div>
 
             <button className="btn btn-dark">Update Sensor</button>
@@ -139,30 +158,42 @@ const UpdateAlarm = ({ match }) => {
     );
 
     const showError = () => (
-        <div className="alert alert-danger" style={{ display: error ? '' : 'none' }}>
+        <div>{(error != '') ? <div className="alert alert-danger alert-dismissible">
             {error}
+        </div> : ''}
+
         </div>
+
     );
 
     const showSuccess = () => (
-        <div className="alert alert-success" style={{ display: success ? '' : 'none' }}>
+        <div>{(success != '') ? <div className="alert alert-success">
             {success}
+        </div> : ''}
+
         </div>
+
     );
 
     return (
         <div className="row">
-            <div className="col-md-8 offset-md-2">
-                <div className="container-fluid">
-                    <div className="jumbotron">
+
+                <div className="container">
+
+                    <div className="jumbotron my-5 mx-2">
+                        <h2>Update Sensor Status</h2>
+                        <br/>
                         {showSuccess()}
                         {showError()}
-                        {newPostForm()}
+                        {newPostForm(values)}
+                        <div>
+                            <span>Note: Sensor status will be updated automatically every 10 seconds. You can manually update by clicking Update Sensor button</span>
+                        </div>
                     </div>
                 </div>
 
 
-            </div>
+
         </div>
     );
 }

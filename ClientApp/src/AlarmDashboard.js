@@ -30,18 +30,25 @@ const AlarmDashboard = () => {
     }
 
     useEffect(() => {
-        loadAlarms();
-    }, [])
+        const interval = setInterval(function(){
+            // window.location.reload(1);
+            // console.log("reloading");
+            loadAlarms();
+        }, 40000);
 
-      setInterval(function(){
-        window.location.reload(1);
-     }, 40000);
+        return () => clearInterval(interval);
+    });
+
+    useEffect(() => {
+        loadAlarms();
+    }, []);
+
 
     const showError = () => (
         <div className="alert alert-danger" style={{ display: error ? '' : 'none' }}>
             {error}
         </div>
-    )
+    );
 
 
     return (
