@@ -1,4 +1,6 @@
 
+import java.awt.Color;
+import java.awt.Component;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +17,8 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  *
@@ -43,6 +47,36 @@ public class Login extends javax.swing.JFrame {
                 }
             }
         }, 0, 5000);
+        
+        jTableLogin.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table,
+                    Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+
+                int co2 = (int) table.getModel().getValueAt(row, 5);
+                int smoke = (int) table.getModel().getValueAt(row, 4);   
+                
+                String status = (String) table.getModel().getValueAt(row, 1);
+                
+                if (smoke > 5 || co2 > 5) {
+                    
+                    setBackground(new Color(255, 191, 191));
+                    setForeground(Color.BLACK);
+                } else {
+                    setBackground(new Color(191, 255, 191));
+                    setForeground(table.getForeground());
+                }
+                
+                if(status == "Inactive"){
+                    setBackground(new Color(226, 226, 226));
+                    setForeground(Color.BLACK);
+                }
+                
+                return c;
+            }
+        });
     }
 
     public void getAlarmData() throws Exception {//Explained in Home.java. Code segments are the same.
@@ -62,7 +96,11 @@ public class Login extends javax.swing.JFrame {
 
         for (int i = 0; i < alarm.size(); i++) {
             rowData[0] = alarm.get(i).alarmId;
-            rowData[1] = alarm.get(i).status;
+            if(alarm.get(i).status == 1){
+                rowData[1] = "Active";
+            }else{
+                rowData[1] = "Inactive";
+            }
             rowData[2] = alarm.get(i).floorNumber;
             rowData[3] = alarm.get(i).roomNumber;
             rowData[4] = alarm.get(i).smokeLevel;
@@ -197,16 +235,9 @@ public class Login extends javax.swing.JFrame {
                 "Alarm Id", "Status", "Floor Number", "Room Number", "Smoke Level", "CO2 Level"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class
-            };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
