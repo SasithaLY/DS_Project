@@ -31,8 +31,6 @@ const AlarmDashboard = () => {
 
     useEffect(() => {
         const interval = setInterval(function(){
-            // window.location.reload(1);
-            // console.log("reloading");
             loadAlarms();
         }, 40000);
 
