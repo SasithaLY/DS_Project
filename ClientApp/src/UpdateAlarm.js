@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { API } from './config';
-import { Redirect } from 'react-router-dom';
 
 const UpdateAlarm = ({ match }) => {
     const [values, setValues] = useState({
@@ -8,7 +7,7 @@ const UpdateAlarm = ({ match }) => {
         smoke: "",
         co2: "",
         error: false,
-        redirectToDashboard: false,
+        success: false
     });
 
     const {
@@ -16,7 +15,7 @@ const UpdateAlarm = ({ match }) => {
         smoke,
         co2,
         error,
-        redirectToDashboard,
+        success
     } = values;
 
     const updateSensor = (sensorId, smoke, co2) => {
@@ -60,42 +59,46 @@ const UpdateAlarm = ({ match }) => {
 
         if (smoke > 10 || smoke < 0) {
             setValues({ ...values, error: "Smoke level must be greater than 0 or less than 10" });
-            showError();
         }
         else if (co2 > 10 || co2 < 0) {
             setValues({ ...values, error: "CO2 level must be greater than 0 or less than 10" });
-            showError();
         }
         else {
-            setTimeout(() => {
-                updateSensor(sensorId, smoke, co2)
-              }, 10000);
-            
-            setValues({
-                ...values,
-                sensorId: "",
-                smoke: "",
-                co2: "",
-                error: false,
-                redirectToDashboard: true
-            });
+            // setTimeout(() => {
+            //     updateSensor(sensorId, smoke, co2)
+            //   }, 10000);
 
-            // updateSensor(sensorId, smoke, co2).then(data => {
-            //     if (data.error) {
-            //         setValues({ ...values, error: data.error });
-            //     } else {
-            //         setValues({
-            //             ...values,
-            //             sensorId: "",
-            //             smoke: "",
-            //             co2: "",
-            //             error: false,
-            //             redirectToDashboard: true
-            //         });
-            //     }
+            // setValues({
+            //     ...values,
+            //     sensorId: "",
+            //     smoke: "",
+            //     co2: "",
+            //     error: false,
+            //     redirectToDashboard: true
             // });
+
+            updateSensor(sensorId, smoke, co2).then(data => {
+                if (data.error) {
+                    setValues({ ...values, error: data.error, success: false });
+                } else {
+                    setValues({
+                        ...values,
+                        sensorId: sensorId,
+                        smoke: smoke,
+                        co2: co2,
+                        error: false,
+                    });
+                    setValues({ ...values, error: false, success: "Sensor Values Updated!" });
+                    setTimeout(() => {
+                        setValues({ ...values, error: false, success: false });
+                    }, 2000);
+                }
+            });
         }
     };
+
+
+
 
     const newPostForm = () => (
         <form className="mb-3" onSubmit={clickSubmit}>
@@ -117,6 +120,7 @@ const UpdateAlarm = ({ match }) => {
                     onChange={handleChange("smoke")}
                     type="number"
                     className="form-control"
+                    min="0" max="10"
                     value={smoke} />
             </div>
 
@@ -126,6 +130,7 @@ const UpdateAlarm = ({ match }) => {
                     onChange={handleChange("co2")}
                     type="number"
                     className="form-control"
+                    min="0" max="10"
                     value={co2} />
             </div>
 
@@ -139,22 +144,20 @@ const UpdateAlarm = ({ match }) => {
         </div>
     );
 
-    const redirect = () => {
-        if (redirectToDashboard) {
-            if (!error) {
-                return <Redirect to="/" />
-            }
-        }
-    }
+    const showSuccess = () => (
+        <div className="alert alert-success" style={{ display: success ? '' : 'none' }}>
+            {success}
+        </div>
+    );
 
     return (
         <div className="row">
             <div className="col-md-8 offset-md-2">
                 <div className="container-fluid">
                     <div className="jumbotron">
+                        {showSuccess()}
                         {showError()}
                         {newPostForm()}
-                        {redirect()}
                     </div>
                 </div>
 
