@@ -27,8 +27,17 @@ const AlarmDashboard = () => {
     }
 
     useEffect(() => {
+        const interval = setInterval(function(){
+            loadAlarms();
+        }, 40000);
+
+        return () => clearInterval(interval);
+    });
+
+    useEffect(() => {
         loadAlarms()
     }, [])
+
 
     const showError = () => (
         <div className="alert alert-danger" style={{ display: error ? '' : 'none' }}>
@@ -50,8 +59,6 @@ const AlarmDashboard = () => {
                 ))}
             </div>
 
-            {/* if not working try whether data are coming from the backend
-            {JSON.stringify(alarms)} */}
         </div>
     );
 };
