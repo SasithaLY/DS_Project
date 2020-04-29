@@ -46,7 +46,7 @@ public class Login extends javax.swing.JFrame {
                     Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        }, 0, 5000);
+        }, 0, 30000);
         
         jTableLogin.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
@@ -232,7 +232,7 @@ public class Login extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Alarm Id", "Status", "Floor Number", "Room Number", "Smoke Level", "CO2 Level"
+                "Sensor Id", "Status", "Floor Number", "Room Number", "Smoke Level", "CO2 Level"
             }
         ) {
             boolean[] canEdit = new boolean [] {

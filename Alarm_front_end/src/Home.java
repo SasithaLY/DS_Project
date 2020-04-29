@@ -55,7 +55,7 @@ public class Home extends javax.swing.JFrame {
                     ex.printStackTrace();
                 }
             }
-        }, 0, 5000);
+        }, 0, 30000);
 
         jTable8.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
@@ -390,7 +390,7 @@ public class Home extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Alarm Id", "Status", "Floor Number", "Room Number", "Smoke Level", "CO2 Level"
+                "Sensor Id", "Status", "Floor Number", "Room Number", "Smoke Level", "CO2 Level"
             }
         ) {
             boolean[] canEdit = new boolean [] {
