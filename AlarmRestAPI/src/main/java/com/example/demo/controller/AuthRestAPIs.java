@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entity.User;
-import com.example.demo.message.JwtResponse;
-import com.example.demo.message.LoginForm;
-import com.example.demo.message.SignUpForm;
+import com.example.demo.forms.JwtResponse;
+import com.example.demo.forms.LoginForm;
+import com.example.demo.forms.SignUpForm;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.security.jwt.JwtProvider;
 
@@ -41,12 +41,12 @@ public class AuthRestAPIs {
     JwtProvider jwtProvider;
  
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm login) {
  
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
-                        loginRequest.getPassword()
+                		login.getUsername(),
+                		login.getPassword()
                 )
         );
  
@@ -57,15 +57,15 @@ public class AuthRestAPIs {
     }
  
     @PostMapping("/signup")
-    public ResponseEntity<String> registerUser(@Valid @RequestBody SignUpForm signUpRequest) {
-        if(userRepository.existsByUsername(signUpRequest.getUsername())) {
+    public ResponseEntity<String> registerUser(@Valid @RequestBody SignUpForm signUp) {
+        if(userRepository.existsByUsername(signUp.getUsername())) {
             return new ResponseEntity<String>("Fail -> Username is already taken!",
                     HttpStatus.BAD_REQUEST);
         }
  
-        // Creating user's account
-        User user = new User(signUpRequest.getUsername(),
-               encoder.encode(signUpRequest.getPassword()), signUpRequest.getRole(), signUpRequest.getPhone(), signUpRequest.getEmail(), signUpRequest.isActive());
+        // Creating user
+        User user = new User(signUp.getUsername(),
+               encoder.encode(signUp.getPassword()), signUp.getRole(), signUp.getPhone(), signUp.getEmail(), signUp.isActive());
 
         userRepository.save(user);
  

@@ -1,4 +1,4 @@
-package com.example.demo.message;
+package com.example.demo.forms;
 
 import java.util.Set;
 
