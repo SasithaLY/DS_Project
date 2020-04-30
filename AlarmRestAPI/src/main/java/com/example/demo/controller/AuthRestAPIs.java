@@ -41,34 +41,28 @@ public class AuthRestAPIs {
     JwtProvider jwtProvider;
  
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm login) {
- 
-        Authentication authentication = authenticationManager.authenticate(
+    public ResponseEntity<?> userAuthenticate(@Valid @RequestBody LoginForm login) {
+        Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                 		login.getUsername(),
                 		login.getPassword()
                 )
         );
- 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
- 
-        String jwt = jwtProvider.generateJwtToken(authentication);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        String jwt = jwtProvider.generateJwtToken(auth);
         return ResponseEntity.ok(new JwtResponse(jwt));
     }
  
     @PostMapping("/signup")
-    public ResponseEntity<String> registerUser(@Valid @RequestBody SignUpForm signUp) {
+    public ResponseEntity<String> userSignup(@Valid @RequestBody SignUpForm signUp) {
         if(userRepository.existsByUsername(signUp.getUsername())) {
-            return new ResponseEntity<String>("Fail -> Username is already taken!",
+            return new ResponseEntity<String>("Failed -> Username is taken!",
                     HttpStatus.BAD_REQUEST);
         }
- 
         // Creating user
         User user = new User(signUp.getUsername(),
                encoder.encode(signUp.getPassword()), signUp.getRole(), signUp.getPhone(), signUp.getEmail(), signUp.isActive());
-
         userRepository.save(user);
- 
         return ResponseEntity.ok().body("User registered successfully!");
     }
 }

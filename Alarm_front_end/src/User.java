@@ -447,7 +447,7 @@ public class User extends javax.swing.JFrame {
             errorInsert.setVisible(false);
 
             String username = usernameInsert.getText();
-            String password = passwordInsert.getPassword().toString();
+            String password = passwordInsert.getText().toString();
             String phone = phoneInsert.getText();
             String email = emailInsert.getText();
             String role = cmbRoleInsert.getSelectedItem().toString();
@@ -562,7 +562,7 @@ public class User extends javax.swing.JFrame {
 
             String id = userIdUpdate.getText();
             String username = usernameUpdate.getText();
-            String password = passwordUpdate.getPassword().toString();
+            String password = passwordUpdate.getText().toString();
             String phone = phoneUpdate.getText();
             String email = emailUpdate.getText();
             String role = cmbRoleUpdate.getSelectedItem().toString();
@@ -624,7 +624,7 @@ public class User extends javax.swing.JFrame {
         if (passwordInsert.getPassword().equals("")) {
             count++;
         }
-        if (phoneInsert.getText().isEmpty()) {
+        if (phoneInsert.getText().isEmpty() || !phoneInsert.getText().startsWith("+") || phoneInsert.getText().length() != 12) {
             count++;
         }
         if (emailInsert.getText().isEmpty()) {
@@ -650,7 +650,7 @@ public class User extends javax.swing.JFrame {
         if (passwordUpdate.getText().isEmpty()) {
             count++;
         }
-        if ((phoneUpdate.getText().isEmpty())) {
+        if (phoneUpdate.getText().isEmpty()  || !phoneUpdate.getText().startsWith("+") || phoneUpdate.getText().length() != 12) {
             count++;
         }
         if (emailUpdate.getText().isEmpty()) {
