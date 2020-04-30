@@ -31,6 +31,7 @@ public class Server extends UnicastRemoteObject implements Service {
 
     public static String TOKEN_BEARER; // Stores the admin token for future purposes.
     StringBuffer response = new StringBuffer(); // StringBuffer initialization. Stores the response from API Server.
+    StringBuffer responseUsers = new StringBuffer(); 
     public static ArrayList<String> criticalAlarmIds = new ArrayList<String>();
     public static ArrayList<String> criticalAlarmIdsTemp = new ArrayList<String>();
 
@@ -356,4 +357,120 @@ public class Server extends UnicastRemoteObject implements Service {
         return response; // Return the response.
     }
 
+    @Override
+    public StringBuffer getUserDataFromApi() throws RemoteException {
+        String url = "http://localhost:8080/api/admin/getAllUsers"; // The GET request URL.
+
+        try {
+            URL obj = new URL(url); // URL initialization.
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection(); // HttpURLConnection opens a connection.
+
+            con.setRequestMethod("GET"); // sets the Method
+            con.setRequestProperty("User-Agent", "Mozilla/5.0");
+            con.setRequestProperty("Authorization", "Bearer " + TOKEN_BEARER);
+
+            int responseCode = con.getResponseCode(); // Retrieves the status CODE such as, 200 or 404.
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream())); // Initialized the
+            // BufferReader.
+            String inputLine;
+
+            while ((inputLine = in.readLine()) != null) {
+                this.responseUsers = null;
+                this.responseUsers = new StringBuffer();
+                this.responseUsers.append(inputLine); // Append the string to the response.
+            }
+            in.close(); // Buffer is closed.
+
+        } catch (Exception e) {
+            System.out.println("Make sure you've run the API Server!");
+        }
+        
+        return responseUsers;
+    }
+
+    @Override
+    public String[] addUser(String jsonDetails, String token) throws RemoteException {
+        String[] response = new String[1]; // Creation of String array to be sent to the RMI Client.
+        try {
+
+            Unirest.setTimeouts(0, 0); // Time out from UNIREST.
+            HttpResponse<String> responseGet = Unirest.post("http://localhost:8080/api/auth/signup") // POST
+                    // Request.
+                    .header("Authorization", "Bearer " + token).header("Content-Type", "application/json")
+                    .body(jsonDetails) // Passing the JSON data to the API Server.
+                    .asString();
+
+            if (responseGet.getStatus() == 200) { // Investigate the response status.
+                response[0] = String.valueOf(responseGet.getStatus());
+                getResponseFromApi();
+
+            } else {
+                response[0] = String.valueOf(responseGet.getStatus());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response; // Return the response.
+    }
+
+    @Override
+    public String[] deleteUser(String id, String token) throws RemoteException {
+        String[] response = new String[1]; // Creation of String array to be sent to the RMI Client.
+        try {
+
+            Unirest.setTimeouts(0, 0); // Time out from UNIREST.
+            HttpResponse<String> responseGet = Unirest.delete("http://localhost:8080/api/admin/deleteUser/"+id) // POST
+                    // Request.
+                    .header("Authorization", "Bearer " + token).header("Content-Type", "application/json")
+                    .asString();
+
+            if (responseGet.getStatus() == 200) { // Investigate the response status.
+                response[0] = String.valueOf(responseGet.getStatus());
+                getResponseFromApi();
+
+            } else {
+                response[0] = String.valueOf(responseGet.getStatus());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response; // Return the response.
+    }
+
+    @Override
+    public String[] updateUser(String jsonDetails, String token) throws RemoteException {
+        String[] values = new String[2];
+        try {
+            Unirest.setTimeouts(0, 0);
+            HttpResponse<String> response = Unirest.put("http://localhost:8080/api/admin/updateUser") // Perform the
+                    // PUT Action.
+                    .header("Authorization", "Bearer " + token) // Passing the Admin Token to get the permission to the
+                    // update process.
+                    .header("Content-Type", "application/json").body(jsonDetails) // Pass the created JSON Data to the
+                    // PUT request.
+                    .asString();
+
+            if (response.getStatus() == 200) {
+                values[0] = String.valueOf(response.getStatus());
+            } else {
+                values[0] = String.valueOf(response.getStatus());
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return values;
+    }
+
+    
+
+ 
+
+    
 }

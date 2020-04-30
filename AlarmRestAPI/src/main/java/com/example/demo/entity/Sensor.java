@@ -37,7 +37,6 @@ public class Sensor {
     @Column(name = "active")
 	private int active;
 	
-	
 	public int getSensorId() {
 		return sensorId;
 	}
@@ -75,7 +74,5 @@ public class Sensor {
 	public void setActive(int active) {
 		this.active = active;
 	}
-	
-	
 	
 }

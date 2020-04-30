@@ -7,6 +7,7 @@
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import org.json.JSONObject;
+import org.json.JSONArray;
 
 public interface Service extends Remote {
 
@@ -25,5 +26,13 @@ public interface Service extends Remote {
 
     public String[] sendSMS(String message) throws RemoteException;
 
-	public String[] sendEmail(String message) throws RemoteException;
+    public String[] sendEmail(String message) throws RemoteException;
+    
+    public StringBuffer getUserDataFromApi() throws RemoteException;
+    
+    public String[] addUser(String jsonDetails, String token) throws RemoteException;
+    
+    public String[] deleteUser(String jsonDetails, String token) throws RemoteException;
+    
+    public String[] updateUser(String jsonDetails, String token) throws RemoteException;
 }

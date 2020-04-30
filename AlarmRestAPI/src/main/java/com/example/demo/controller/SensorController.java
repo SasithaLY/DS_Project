@@ -28,7 +28,6 @@ public class SensorController {
 	
 	@PostMapping("/api/admin/addSensor")
 	public Sensor addSensor(@RequestBody Sensor sensor) {
-
 		return sensorService.saveSensor(sensor);
 	}
 
