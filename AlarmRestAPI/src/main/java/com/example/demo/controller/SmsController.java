@@ -41,7 +41,6 @@ public class SmsController {
 						msg = smsService.sendSMS(u.getPhone(), message);
 					}
 				}
-				
 			});
 
 		} catch (Exception e) {
@@ -50,5 +49,4 @@ public class SmsController {
 
 		return msg;
 	}
-
 }

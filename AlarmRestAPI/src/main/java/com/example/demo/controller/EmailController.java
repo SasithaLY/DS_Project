@@ -30,8 +30,7 @@ public class EmailController {
 		
 		List<User> userList = userService.getAllUsers();
 
-		emails = "";
-		
+		emails = "";	
 		try {
 			userList.forEach((u) -> {
 
@@ -42,11 +41,6 @@ public class EmailController {
 				}
 
 			});
-			
-			/*
-			 * if(!emails.equals("")) { emailService.sendEmail(message, emails); }
-			 */
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
