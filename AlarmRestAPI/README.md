@@ -1,9 +1,6 @@
 # alarm_rest_api
+
 DS Project Fire Alarm Sensor Rest API
-
-
-Database Url = http://3.83.24.73/phpmyadmin
-
 
 >>> API Documentation
 
@@ -23,6 +20,8 @@ Database Url = http://3.83.24.73/phpmyadmin
 	Input JSON: {
 		"username":"test",
 		"password":"test",
+		"phone":"+94710669965"
+		"email":"abcd@gmail.com"
 		"role": "Admin",
 		"active":1
 	}
