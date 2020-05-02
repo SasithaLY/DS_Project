@@ -14,31 +14,31 @@ import com.example.demo.repository.UserRepository;
 public class UserService {
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserRepository userRepo;
 
 	@Autowired
 	PasswordEncoder encoder;
 
 	public List<User> getAllUsers() {
 
-		return userRepository.findAll();
+		return userRepo.findAll();
 	}
 
 	public User getUserById(int id) {
 
-		return userRepository.findById(id).orElse(null);
+		return userRepo.findById(id).orElse(null);
 	}
 
 	public String deleteUser(int id) {
 
-		userRepository.deleteById(id);
+		userRepo.deleteById(id);
 
 		return "user removed " + id;
 	}
 
 	public User updateUser(User user) {
 
-		User currentUser = userRepository.findById(user.getId()).orElse(null);
+		User currentUser = userRepo.findById(user.getId()).orElse(null);
 		
 		currentUser.setUsername(user.getUsername());
 		currentUser.setPassword(encoder.encode(user.getPassword()));
@@ -47,7 +47,7 @@ public class UserService {
 		currentUser.setRole(user.getRole());
 		currentUser.setActive(user.isActive());
 
-		return userRepository.save(currentUser);
+		return userRepo.save(currentUser);
 
 	}
 }

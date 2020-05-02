@@ -13,13 +13,13 @@ public class EmailService {
 
 	public void sendEmail(String text, String addresses) {
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(addresses);
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setTo(addresses);
 
-        message.setSubject("Alarm Alert Message (Critical)");
-        message.setText(text);
+        email.setSubject("Alarm Alert Message (Critical)");
+        email.setText(text);
 
-        javaMailSender.send(message);
+        javaMailSender.send(email);
 
     }
 }

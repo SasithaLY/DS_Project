@@ -38,7 +38,7 @@ public class SmsController {
 				
 				if (u.getPhone() != null) {
 					if (!u.getPhone().isEmpty()) {
-						msg = smsService.sendSMS(u.getPhone(), message);
+						msg = smsService.sendMessage(u.getPhone(), message);
 					}
 				}
 			});

@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entity.User;
 import com.example.demo.forms.JwtResponse;
-import com.example.demo.forms.LoginForm;
-import com.example.demo.forms.SignUpForm;
+import com.example.demo.forms.Login;
+import com.example.demo.forms.Register;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.security.jwt.JwtProvider;
 
@@ -29,40 +29,40 @@ import com.example.demo.security.jwt.JwtProvider;
 public class AuthRestAPIs {
 
 	@Autowired
-    AuthenticationManager authenticationManager;
+    AuthenticationManager authManager;
  
     @Autowired
-    UserRepository userRepository;
+    UserRepository userRepo;
  
     @Autowired
     PasswordEncoder encoder;
  
     @Autowired
-    JwtProvider jwtProvider;
+    JwtProvider jwt;
  
     @PostMapping("/signin")
-    public ResponseEntity<?> userAuthenticate(@Valid @RequestBody LoginForm login) {
-        Authentication auth = authenticationManager.authenticate(
+    public ResponseEntity<?> userAuthenticate(@Valid @RequestBody Login login) {
+        Authentication auth = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                 		login.getUsername(),
                 		login.getPassword()
                 )
         );
         SecurityContextHolder.getContext().setAuthentication(auth);
-        String jwt = jwtProvider.generateJwtToken(auth);
-        return ResponseEntity.ok(new JwtResponse(jwt));
+        String token = jwt.generateJwtToken(auth);
+        return ResponseEntity.ok(new JwtResponse(token));
     }
  
     @PostMapping("/signup")
-    public ResponseEntity<String> userSignup(@Valid @RequestBody SignUpForm signUp) {
-        if(userRepository.existsByUsername(signUp.getUsername())) {
-            return new ResponseEntity<String>("Failed -> Username is taken!",
+    public ResponseEntity<String> userSignup(@Valid @RequestBody Register reg) {
+        if(userRepo.existsByUsername(reg.getUsername())) {
+            return new ResponseEntity<String>("Failed -> Username Exist!",
                     HttpStatus.BAD_REQUEST);
         }
         // Creating user
-        User user = new User(signUp.getUsername(),
-               encoder.encode(signUp.getPassword()), signUp.getRole(), signUp.getPhone(), signUp.getEmail(), signUp.isActive());
-        userRepository.save(user);
-        return ResponseEntity.ok().body("User registered successfully!");
+        User u = new User(reg.getUsername(),
+               encoder.encode(reg.getPassword()), reg.getRole(), reg.getPhone(), reg.getEmail(), reg.isActive());
+        userRepo.save(u);
+        return ResponseEntity.ok().body("Successfully Registered The User!");
     }
 }

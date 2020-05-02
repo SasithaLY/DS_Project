@@ -2,7 +2,7 @@ package com.example.demo.forms;
 
 import javax.validation.constraints.NotBlank;
 
-public class LoginForm {
+public class Login {
 	
 	@NotBlank
     private String username;

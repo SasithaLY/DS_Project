@@ -4,7 +4,7 @@ import java.util.Set;
 
 import javax.validation.constraints.NotBlank;
 
-public class SignUpForm {
+public class Register {
 
     @NotBlank
     private String username;
